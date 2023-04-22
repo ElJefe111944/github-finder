@@ -39,10 +39,17 @@ export const GithubProvider = ({ children }) => {
         type: 'SET_LOADING',
     })
 
+
+    // clear search
+    const clearSearch = () => dipatch({
+        type: 'CLEAR_SEARCH',
+    })
+
     return <GithubContext.Provider value={{
         users: state.users,
         loading: state.loading,
-        searchUsers
+        searchUsers,
+        clearSearch
     }}>
         {children}
     </GithubContext.Provider>

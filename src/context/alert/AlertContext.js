@@ -19,7 +19,7 @@ export const AlertProvider = ({ children }) => {
         dispatch({
             type: 'REMOVE_ALERT',
         })
-    }, 3000)
+    }, 5000)
 
         return <AlertContext.Provider value={{
             alert: state,

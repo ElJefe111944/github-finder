@@ -3,13 +3,14 @@ import githubReducer from "./GithubReducer";
 
 const GithubContext = createContext();
 
-const GITHUB_URL= process.env.REACT_APP_GITHUB_URL;
-const GITHUB_TOKEN= process.env.REACT_APP_GITHUB_TOKEN;
+const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
+const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
 export const GithubProvider = ({ children }) => {
     const initialState = {
         users: [],
         user: {},
+        repos: [],
         loading: false,
     }
 
@@ -35,27 +36,49 @@ export const GithubProvider = ({ children }) => {
         })
     }
 
-        // Search User - Individual
-        const searchUser = async (login) => {
+    // Search User - Individual
+    const searchUser = async (login) => {
 
-            setLoading();
-    
-            const response = await fetch(`${GITHUB_URL}/users/${login}`, {
-                Authorization: `token ${GITHUB_TOKEN}`
-            })
-            // if not found redirect to 404
-            if(response.status === 404){
-                window.location = '/not-found';
-            } else {
-                // get data
-                const data = await response.json();
-    
-                dipatch({
-                    type: 'GET_USER',
-                    payload: data,
-                });
-            }
+        setLoading();
+
+        const response = await fetch(`${GITHUB_URL}/users/${login}`, {
+            Authorization: `token ${GITHUB_TOKEN}`
+        })
+        // if not found redirect to 404
+        if (response.status === 404) {
+            window.location = '/not-found';
+        } else {
+            // get data
+            const data = await response.json();
+
+            dipatch({
+                type: 'GET_USER',
+                payload: data,
+            });
         }
+    }
+
+    // Get user repos 
+    const getUserRepos = async (login) => {
+
+        setLoading();
+
+        const response = await fetch(`${GITHUB_URL}/users/${login}/repos`, {
+            Authorization: `token ${GITHUB_TOKEN}`
+        })
+        // if not found redirect to 404
+        if (response.status === 404) {
+            window.location = '/not-found';
+        } else {
+            // get data
+            const data = await response.json();
+
+            dipatch({
+                type: 'GET_USER_REPOS',
+                payload: data,
+            });
+        }
+    }
 
     // set loading 
     const setLoading = () => dipatch({
@@ -71,9 +94,11 @@ export const GithubProvider = ({ children }) => {
         users: state.users,
         loading: state.loading,
         user: state.user,
+        repos: state.repos,
         searchUsers,
         searchUser,
-        clearSearch
+        clearSearch,
+        getUserRepos
     }}>
         {children}
     </GithubContext.Provider>

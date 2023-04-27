@@ -14,27 +14,8 @@ export const GithubProvider = ({ children }) => {
         loading: false,
     }
 
-    const [state, dipatch] = useReducer(githubReducer, initialState)
+    const [state, dispatch] = useReducer(githubReducer, initialState)
 
-    // Search Users
-    const searchUsers = async (text) => {
-
-        setLoading();
-
-        const params = new URLSearchParams({
-            q: text
-        })
-
-        const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
-            Authorization: `token ${GITHUB_TOKEN}`
-        })
-        const { items } = await response.json();
-
-        dipatch({
-            type: 'GET_USERS',
-            payload: items,
-        })
-    }
 
     // Search User - Individual
     const searchUser = async (login) => {
@@ -51,7 +32,7 @@ export const GithubProvider = ({ children }) => {
             // get data
             const data = await response.json();
 
-            dipatch({
+            dispatch({
                 type: 'GET_USER',
                 payload: data,
             });
@@ -78,7 +59,7 @@ export const GithubProvider = ({ children }) => {
             // get data
             const data = await response.json();
 
-            dipatch({
+            dispatch({
                 type: 'GET_USER_REPOS',
                 payload: data,
             });
@@ -86,21 +67,18 @@ export const GithubProvider = ({ children }) => {
     }
 
     // set loading 
-    const setLoading = () => dipatch({
+    const setLoading = () => dispatch({
         type: 'SET_LOADING',
     })
 
     // clear search
-    const clearSearch = () => dipatch({
+    const clearSearch = () => dispatch({
         type: 'CLEAR_SEARCH',
     })
 
     return <GithubContext.Provider value={{
-        users: state.users,
-        loading: state.loading,
-        user: state.user,
-        repos: state.repos,
-        searchUsers,
+        ...state,
+        dispatch,
         searchUser,
         clearSearch,
         getUserRepos

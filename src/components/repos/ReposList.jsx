@@ -14,7 +14,7 @@ function ReposList({ repos }) {
   )
 }
 
-ReposList.propTypes = {
+ReposList.propTypes = { 
     repos: PropTypes.array.isRequired,
 };
 

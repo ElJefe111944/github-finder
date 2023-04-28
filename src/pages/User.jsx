@@ -5,7 +5,7 @@ import Spinner from "../components/layout/Spinner";
 import ReposList from "../components/repos/ReposList";
 import GithubContext from "../context/github/GithubContext";
 import { useParams } from "react-router";
-import { getUserRepos, searchUser } from "../context/github/GithubActions";
+import {  getUserAndRepos } from "../context/github/GithubActions";
 
 function User() {
 
@@ -18,18 +18,11 @@ function User() {
 
         const getUserData = async () => {
 
-            const userData = await searchUser(params.login);
+            const userData = await  getUserAndRepos(params.login);
             dispatch({ 
-                type: 'GET_USER',
+                type: 'GET_USER_AND_REPOS',
                 payload: userData
              });
-
-             const userRepoData = await getUserRepos(params.login);
-             dispatch({ 
-                 type: 'GET_USER_REPOS',
-                 payload: userRepoData
-              });
-
         }
 
         getUserData();
